@@ -1,5 +1,7 @@
 package com.dw.sc.gateway.filter;
 
+import com.dw.sc.common.constant.TokenConstant;
+import com.dw.sc.common.util.TokenUtil;
 import com.dw.sc.gateway.config.white.WhitePathConfig;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +26,10 @@ import java.util.regex.Pattern;
 @Component
 public class TokenFilter implements GlobalFilter, Ordered {
 
-    public static final String SERVER_REGEX = "\\/(.[^/]*)";
-
     @Autowired
     private WhitePathConfig whitePathConfig;
+
+    private static final String PATH_REGEX = "\\/(.[^\\/]*)(.*)";
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -37,14 +39,17 @@ public class TokenFilter implements GlobalFilter, Ordered {
         ServerHttpResponse response = exchange.getResponse();
         // 判断白名单
         if (isWhite(request.getURI().getPath())) {
+            // 是白名单 通过
             return chain.filter(exchange);
-
         }
         // 请求头
         HttpHeaders headers = request.getHeaders();
-        headers.getFirst("token");
-
-
+        String token = headers.getFirst(TokenConstant.TOKEN_NAME);
+        log.info("Token: {}", token);
+        // 校验Token
+        // 目前只校验解析正常
+        TokenUtil.parseToken(token);
+        // 通过
         return chain.filter(exchange);
     }
 
@@ -59,25 +64,27 @@ public class TokenFilter implements GlobalFilter, Ordered {
      * @return
      */
     private boolean isWhite(String url) {
-        Map<String, List<String>> whiteList = whitePathConfig.getPath();
-        // 路径 或 白名单 为空
-        if (StringUtils.isEmpty(url) || whiteList.isEmpty()) {
+        // 路径为空
+        if (StringUtils.isEmpty(url)) {
             return false;
         }
-        // 服务名
-        String server = getServerName(url);
-        // 对应服务名的白名单规则集合
-        List<String> rules = whiteList.getOrDefault(server, Lists.newArrayList());
-        for (String rule : rules) {
-            // 拼接路径 拼接成 /服务名/规则
-            rule = "/" + server + rule;
-            // 与白名单一致
-            if (rule.equals(url)) {
-                return true;
-            }
-            // 通配符一致
-            if ((rule.endsWith("**")) && (url.indexOf(rule.substring(0, rule.lastIndexOf("**"))) == 0)) {
-                return true;
+        Pattern p = Pattern.compile(PATH_REGEX);
+        Matcher m = p.matcher(url);
+        if (m.find() && m.groupCount() == 2) {
+            // 服务名
+            String serverName = m.group(1);
+            // 路径
+            String path = m.group(2);
+            List<String> whiteList = whitePathConfig.getWhitePath(serverName);
+            for (String rule : whiteList) {
+                // 与白名单一致
+                if (rule.equals(path)) {
+                    return true;
+                }
+                // 通配符一致
+                if ((rule.endsWith("**")) && (path.indexOf(rule.substring(0, rule.lastIndexOf("**"))) == 0)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -90,12 +97,47 @@ public class TokenFilter implements GlobalFilter, Ordered {
      * @return
      */
     private String getServerName(String url) {
-        Pattern p = Pattern.compile(SERVER_REGEX);
-        Matcher m = p.matcher(url);
-        if (m.find()) {
-            return m.group(1);
+        String[] words = url.split("\\/", -1);
+        for (String word : words) {
+            // 返回第一个不为空
+            if (StringUtils.isNotEmpty(word)) {
+                return word;
+            }
         }
         return "";
     }
+
+    /**
+     * 获取真是路径
+     * 入参 /A/B/C 返回 A
+     * @param url
+     * @return
+     */
+    private String getPath(String url) {
+        String[] words = url.split("\\/", -1);
+        Boolean flag = false;
+        List<String> paths = Lists.newArrayList();
+        for (String word : words) {
+            // 返回第一个不为空
+            if (StringUtils.isNotEmpty(word)) {
+                return word;
+            }
+        }
+        return "/" + String.join("\\/", paths);
+    }
+
+    public static void main(String[] args) {
+        Pattern p = Pattern.compile(PATH_REGEX);
+        Matcher m = p.matcher("/A/B/C/D/E");
+        if (m.find()) {
+            System.out.println(m.groupCount());
+            System.out.println(m.group(0));
+            System.out.println(m.group(1));
+            System.out.println(m.group(2));
+            System.out.println(m.group(3));
+        }
+
+    }
+
 
 }
