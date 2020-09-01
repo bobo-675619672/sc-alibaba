@@ -1,4 +1,4 @@
-package com.dw.sc.gateway.constant;
+package com.dw.sc.common.constant;
 
 public class TokenConstant {
 

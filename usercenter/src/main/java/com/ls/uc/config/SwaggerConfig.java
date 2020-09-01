@@ -1,7 +1,7 @@
 package com.ls.uc.config;
 
-import com.gfs.common.annotation.EnableBeanValidator;
-import com.gfs.common.constant.TokenConstant;
+import com.dw.sc.common.annotation.EnableBeanValidator;
+import com.dw.sc.common.constant.TokenConstant;
 import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,6 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.ServletContext;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
