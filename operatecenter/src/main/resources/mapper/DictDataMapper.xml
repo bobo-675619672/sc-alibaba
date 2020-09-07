@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.gfs.operatecenter.dao.DictData.DictDataMapper">
-
-    <select id="queryByGroupId" resultType="com.gfs.operatecenter.entity.vo.dictdata.DictDataVoResponse">
-        SELECT id,dict_id,dict_name,dict_val,group_id,remark,seq  FROM `sysm_conf_dictitem` WHERE group_id=#{groupId} AND status=1 ORDER BY seq
-    </select>
-
-</mapper>

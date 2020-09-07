@@ -1,7 +1,6 @@
 package com.gfs.operatecenter;
 
 import lombok.extern.slf4j.Slf4j;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
-@MapperScan(basePackages = {"com.gfs.operatecenter.dao"})
+//@MapperScan(basePackages = {"com.gfs.operatecenter.dao"})
 public class OperatecenterApplication {
 
     @Value("${spring.profiles.active}")
