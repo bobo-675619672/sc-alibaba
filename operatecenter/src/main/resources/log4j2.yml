@@ -1,0 +1,124 @@
+# configure.status 为设置日志输出级别，级别如下：OFF 、FATAL 、ERROR、WARN、INFO、DEBUG、TRACE、ALL
+#configure.monitorInterval 监控间隔 指log4j2每隔600秒（10分钟），自动监控该配置文件是否有变化，如果变化，则自动根据文件内容重新配置
+Configuration:
+  status: info
+  monitorInterval: 600
+  Properties:
+    Property:
+      - name: log.level.console
+        value: info
+      - name: log.path
+        value: "/var/log/gfs-logs"
+      - name: project.name
+        value: operatecenter
+      - name: log.pattern
+        value: "%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %m%n"
+
+  Appenders:
+    #控制台
+    Console:
+      name: CONSOLE
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: ${log.pattern}
+      ThresholdFilter:
+        level: info
+        onMatch: ACCEPT
+        onMismatch: DENY
+
+    RollingFile:
+      #debug 日志
+      - name: DEBUG_LOG
+        fileName: ${log.path}/debug/${project.name}_debug.log
+        filePattern: "${log.path}/debug/${project.name}_debug-%d{yyyy-MM-dd HH}_%i.log.gz"
+        PatternLayout:
+          pattern: ${log.pattern}
+        Filters:
+          ThresholdFilter:
+            level: debug
+            onMatch: ACCEPT
+            onMismatch: DENY
+        Policies:
+          # TimeBasedTriggeringPolicy基于时间的触发策略
+          TimeBasedTriggeringPolicy:
+            #（boolean）以0点为边界进行偏移计算， 如果 RollingFile.filePattern 以小时 %d{yyyy-MM-dd HH}为单位才会有效 interval=12 则表示两个文件
+            modulate: true
+            # interval=12表示12小时（单位：基于RollingFile.filePattern 中的 %d{yyyy-MM-dd HH}值）
+            interval: 12
+        #属性如不设置，则默认为最多同一文件夹下7个文件开始覆盖
+        DefaultRolloverStrategy:
+          max: 100
+
+        #info 日志
+      - name: INFO_LOG
+        fileName: ${log.path}/info/${project.name}_info.log
+        filePattern: "${log.path}/info/${project.name}_info-%d{yyyy-MM-dd}_%i.log.gz"
+        PatternLayout:
+          pattern: ${log.pattern}
+        Filters:
+          ThresholdFilter:
+            level: info
+            onMatch: ACCEPT
+            onMismatch: DENY
+        Policies:
+          # TimeBasedTriggeringPolicy基于时间的触发策略
+          TimeBasedTriggeringPolicy:
+            #（boolean）以0点为边界进行偏移计算， 如果 RollingFile.filePattern 以小时 %d{yyyy-MM-dd HH}为单位才会有效
+            modulate: true
+            # interval=1表示一天（单位：基于RollingFile.filePattern 中的 %d{yyyy-MM-dd}值）
+            interval: 1
+        #属性如不设置，则默认为最多同一文件夹下7个文件开始覆盖
+        DefaultRolloverStrategy:
+          max: 100
+
+        #warn 日志
+      - name: WARN_LOG
+        fileName: ${log.path}/warn/${project.name}_warn.log
+        filePattern: "${log.path}/warn/${project.name}_warn-%d{yyyy-MM-dd}_%i.log.gz"
+        PatternLayout:
+          pattern: ${log.pattern}
+        Filters:
+          ThresholdFilter:
+            level: warn
+            onMatch: ACCEPT
+            onMismatch: DENY
+        Policies:
+          TimeBasedTriggeringPolicy:
+            modulate: true
+            interval: 1
+        #属性如不设置，则默认为最多同一文件夹下7个文件开始覆盖
+        DefaultRolloverStrategy:
+          max: 100
+
+        #error 日志
+      - name: ERROR_LOG
+        fileName: ${log.path}/error/${project.name}_error.log
+        filePattern: "${log.path}/error/${project.name}_error-%d{yyyy-MM-dd}_%i.log.gz"
+        PatternLayout:
+          pattern: ${log.pattern}
+        Filters:
+          ThresholdFilter:
+            # 日志级别， 只接受error 以上的日志
+            level: error
+            onMatch: ACCEPT
+            onMismatch: DENY
+        Policies:
+          # TimeBasedTriggeringPolicy基于时间的触发策略
+          TimeBasedTriggeringPolicy:
+            #（boolean）以0点为边界进行偏移计算， 如果 RollingFile.filePattern 以小时 %d{yyyy-MM-dd HH}为单位才会有效
+            modulate: true
+            # interval=1表示一天（单位：基于RollingFile.filePattern 中的 %d{yyyy-MM-dd}值）
+            interval: 1
+        #属性如不设置，则默认为最多同一文件夹下7个文件开始覆盖
+        DefaultRolloverStrategy:
+          max: 100
+
+  Loggers:
+    Root:
+      level: info
+      AppenderRef:
+        - ref: CONSOLE
+        #        - ref: DEBUG_LOG
+        - ref: INFO_LOG
+        #        - ref: WARN_LOG
+        - ref: ERROR_LOG

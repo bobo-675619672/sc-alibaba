@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gfs.operatecenter.dao.BannerMapper">
+    <resultMap id="BaseResultMap" type="com.gfs.operatecenter.entity.table.Banner">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="channel_type" jdbcType="VARCHAR" property="channelType"/>
+        <result column="hint" jdbcType="VARCHAR" property="hint"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+        <result column="image_name" jdbcType="VARCHAR" property="imageName"/>
+        <result column="html_code" jdbcType="VARCHAR" property="htmlCode"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="jump" jdbcType="INTEGER" property="jump"/>
+        <result column="link" jdbcType="VARCHAR" property="link"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="final_time" jdbcType="TIMESTAMP" property="finalTime"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+        <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
+        <association property="bannerJump" javaType="com.gfs.operatecenter.entity.vo.banner.BannerJumpVo">
+            <id column="s_id" jdbcType="BIGINT" property="id"/>
+            <result column="s_created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+            <result column="s_updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
+            <result column="s_banner_id" jdbcType="VARCHAR" property="bannerId"/>
+            <result column="s_content_type" jdbcType="VARCHAR" property="contentType"/>
+            <result column="s_mall_content_type" jdbcType="VARCHAR" property="mallContentType"/>
+            <result column="s_price_id" jdbcType="BIGINT" property="priceId"/>
+            <result column="s_goods_id" jdbcType="VARCHAR" property="goodsId"/>
+            <result column="s_content_id" jdbcType="BIGINT" property="contentId"/>
+            <result column="s_skip_type" jdbcType="VARCHAR" property="skipType"/>
+            <result column="s_book_id" jdbcType="BIGINT" property="bookId"/>
+            <result column="s_grade" jdbcType="INTEGER" property="grade"/>
+            <result column="s_grade_name" jdbcType="VARCHAR" property="gradeName"/>
+            <result column="s_up_down" jdbcType="VARCHAR" property="upDown"/>
+            <result column="s_up_down_name" jdbcType="VARCHAR" property="upDownName"/>
+            <result column="s_unit_id" jdbcType="BIGINT" property="unitId"/>
+            <result column="s_editor" jdbcType="VARCHAR" property="editor"/>
+            <result column="s_remark" jdbcType="VARCHAR" property="remark"/>
+            <result column="s_extend_id" jdbcType="VARBINARY" property="extendId"/>
+            <result column="s_modular" jdbcType="VARCHAR" property="modular"/>
+            <result column="s_modular_name" jdbcType="VARCHAR" property="modularName"/>
+            <result column="s_content_name" jdbcType="VARCHAR" property="contentName"/>
+            <result column="s_page_type" jdbcType="VARCHAR" property="pageType"/>
+        </association>
+    </resultMap>
+
+    <sql id="Base_Column_Jump">
+        <trim suffixOverrides=",">
+            mabj.id as s_id,
+            mabj.created_at as s_created_at,
+            mabj.updated_at as s_updated_at,
+            mabj.banner_id as s_banner_id,
+            mabj.content_type as s_content_type,
+            mabj.content_id as s_content_id,
+            mabj.skip_type as s_skip_type,
+            mabj.book_id as s_book_id,
+            mabj.grade as s_grade,
+            mabj.grade_name as s_grade_name,
+            mabj.up_down as s_up_down,
+            mabj.up_down_name as s_up_down_name,
+            mabj.unit_id as s_unit_id,
+            mabj.editor as s_editor,
+            mabj.remark as s_remark,
+            mabj.extend_id as s_extend_id,
+            mabj.modular as s_modular,
+            mabj.modular_name as s_modular_name,
+            mabj.content_name as s_content_name,
+            mabj.page_type as s_page_type,
+            mabj.price_id     as s_price_id,
+            mabj.goods_id     as s_goods_id,
+            mabj.mall_content_type  as s_mall_content_type,
+        </trim>
+    </sql>
+    <select id="queryBannerForPc" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        select t.* from(
+        select mabr.*,b.mode,b.id as whiteid,
+        sum(case when b.id is null then 1
+        when b.mode=1 and mwbe.id is not null then -100
+        when b.mode=1 and mwbe.id is null then 1
+        when b.mode=2 and mwbe.id is not null then 1
+        else 0 end) isok,
+        <include refid="Base_Column_Jump"/>
+        from mk_act_banner mabr
+        left join mk_whitelist_relation mwrn on mabr.id = mwrn.relation_id  and mwrn.relation_type = 'banner'
+        left join mk_whitelist_base b on mwrn.white_id = b.id
+        left join mk_act_banner_jump mabj on mabj.banner_id = mabr.id
+        left join mk_whitelist_base mwbe on mwrn.white_id = mwbe.id   and ((mwbe.mode = '1' and exists(
+        select 1 from mk_whitelist_data d where mwbe.id = d.base_id and d.content = elt(mwbe.type, #{phone}, #{region}, #{schoolId}, #{classesId}, #{bookId})))
+        or
+        (mwbe.mode = '2' and exists(
+        select 1 from mk_whitelist_data d where mwbe.id = d.base_id and d.content = elt(mwbe.type, #{phone}, #{region}, #{schoolId}, #{classesId}, #{bookId}))))
+        group by mabr.id,
+        b.mode,
+        b.id,
+        mabj.id, mabj.content_type, mabj.content_id, mabj.skip_type, mabj.book_id, mabj.grade, mabj.grade_name,
+        mabj.up_down, mabj.up_down_name, mabj.unit_id, mabj.editor, mabj.remark, mabj.extend_id, mabj.modular,
+        mabj.modular_name, mabj.content_name, mabj.page_type, mabj.price_id, mabj.goods_id,mabj.mall_content_type
+        ) t  where  isok >0 and t.channel_type = #{channelType}
+        order by t.sort
+    </select>
+
+</mapper>
