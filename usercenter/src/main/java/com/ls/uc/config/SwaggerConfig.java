@@ -1,5 +1,4 @@
 package com.ls.uc.config;
-
 import com.dw.sc.common.annotation.EnableBeanValidator;
 import com.dw.sc.common.constant.TokenConstant;
 import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;

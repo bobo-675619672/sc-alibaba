@@ -23,7 +23,7 @@ import java.io.Serializable;
 public class User implements Serializable {
 
     @Column(name = "uset_id",type = MySqlTypeConstant.INT,isKey = true,isAutoIncrement = true)
-    private Integer id;
+    private Long id;
 
     @Column(name = "name",type = MySqlTypeConstant.VARCHAR,isKey = true)
     @NotBlank(message = "不能为空")
@@ -33,4 +33,6 @@ public class User implements Serializable {
     @NotBlank(message = "不能为空")
     private String pwd;
 
+    @Column(name = "phone",type = MySqlTypeConstant.VARCHAR,isKey = true)
+    private String phone;
 }
