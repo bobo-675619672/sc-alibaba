@@ -5,8 +5,11 @@ import com.dw.sc.common.bean.ResponseMsg;
 import com.dw.sc.common.enums.ResultEnum;
 import com.dw.sc.common.exception.BusiException;
 import com.ls.uc.entity.pojo.TestRequestVo;
+import com.ls.uc.feign.client.ContentcenterFeignService;
+import com.ls.uc.feign.client.OperatecenterFeignService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -15,6 +18,11 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/test")
 public class TestController extends BaseController {
+
+    @Autowired
+    private ContentcenterFeignService contentcenterFeignService;
+    @Autowired
+    private OperatecenterFeignService operatecenterFeignService;
 
     @ApiOperation(value = "测试异常1")
     @GetMapping("/exception1")
@@ -36,6 +44,18 @@ public class TestController extends BaseController {
     @PostMapping("/valid")
     public ResponseMsg<String> valid(@Valid @RequestBody TestRequestVo vo) {
         return success("成功");
+    }
+
+    @ApiOperation(value = "测试feign")
+    @GetMapping("/feign/{center}")
+    public ResponseMsg<String> feign(@PathVariable String center) {
+        String result = "";
+        if ("cc".equals(center)) {
+            result = contentcenterFeignService.query().getData();
+        } else if ("oc".equals(center)) {
+            result = operatecenterFeignService.query().getData();
+        }
+        return success("成功:" + result);
     }
 
 }

@@ -1,5 +1,7 @@
 package com.ls.contentcenter.controller;
 
+import com.dw.sc.common.bean.BaseController;
+import com.dw.sc.common.bean.ResponseMsg;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.BindingResult;
@@ -12,11 +14,13 @@ import javax.validation.Valid;
 
 @Api("内容中心")
 @RestController
-@RequestMapping("/contentcenter")
-public class TestControler {
+@RequestMapping("/test")
+public class TestControler extends BaseController {
+
     @ApiOperation(value = "测试")
-    @GetMapping("/test")
-    public String query() {
-        return "yes";
+    @GetMapping("/query")
+    public ResponseMsg<String> query() {
+        return success("yes");
     }
+
 }

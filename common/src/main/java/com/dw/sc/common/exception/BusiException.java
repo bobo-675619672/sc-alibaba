@@ -26,8 +26,8 @@ public class BusiException extends RuntimeException {
         this.code = resultEnum.getCode();
     }
 
-    public BusiException(ResultEnum resultEnum, Throwable cause) {
-        super(resultEnum.getMessage(), cause);
+    public BusiException(ResultEnum resultEnum, Throwable cause, Object... args) {
+        super(String.format(resultEnum.getMessage(), args), cause);
         this.code = resultEnum.getCode();
     }
 

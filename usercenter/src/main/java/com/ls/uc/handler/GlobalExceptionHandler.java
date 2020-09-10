@@ -4,6 +4,7 @@ import com.dw.sc.common.bean.ResponseHead;
 import com.dw.sc.common.bean.ResponseMsg;
 import com.dw.sc.common.enums.ResponseHeadEnum;
 import com.dw.sc.common.exception.BusiException;
+import com.netflix.client.ClientException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
@@ -60,7 +61,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusiException.class)
     @ResponseStatus(HttpStatus.OK)
     public ResponseMsg defultBusiExceptionHandler(HttpServletRequest request, BusiException e) {
-        log.error("Business Exceptions URL:{} , Error Message: {} ", request.getRequestURL(), e.getMessage());
+        log.error("Business Exceptions URL:{} , Error Message: {} ", request.getRequestURL(), e.getMessage(), e);
         return getResponseMsg(ResponseHeadEnum.FAIL.getStatus(), String.valueOf(e.getCode()), e.getMessage(),"info");
     }
 
@@ -74,7 +75,32 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.OK)
     public ResponseMsg defultExcepitonHandler(HttpServletRequest request, Exception e) {
         log.error("System.Exceptions URL:{}", request.getRequestURL(), e);
-        return getResponseMsg(ResponseHeadEnum.FAIL.getStatus(), ResponseHeadEnum.FAIL.getCode(), "System Exceptions","error");
+        String msg = e.getMessage();
+        // 生产环境
+        if (ENV_PROD.equals(profile)) {
+            // 用户展示
+            msg = "系统异常";
+        }
+        return getResponseMsg(ResponseHeadEnum.FAIL.getStatus(), ResponseHeadEnum.FAIL.getCode(), msg,"error");
+    }
+
+    /**
+     * 空指针异常
+     * @param request
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(NullPointerException.class)
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseMsg nullPointerExcepitonHandler(HttpServletRequest request, NullPointerException e) {
+        log.error("NullPointer.Exceptions URL:{}", request.getRequestURL(), e);
+        String msg = "空指针异常NullPointerException";
+        // 生产环境
+        if (ENV_PROD.equals(profile)) {
+            // 用户展示
+            msg = "系统异常";
+        }
+        return getResponseMsg(ResponseHeadEnum.FAIL.getStatus(), ResponseHeadEnum.FAIL.getCode(), msg,"error");
     }
 
     /**
