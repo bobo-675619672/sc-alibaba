@@ -37,6 +37,7 @@ public class TokenFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
         // 响应
         ServerHttpResponse response = exchange.getResponse();
+
         // 判断白名单
         if (isWhite(request.getURI().getPath())) {
             // 是白名单 通过
