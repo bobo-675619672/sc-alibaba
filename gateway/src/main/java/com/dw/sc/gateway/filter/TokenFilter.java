@@ -79,6 +79,7 @@ public class TokenFilter implements GlobalFilter, Ordered {
             String path = m.group(2);
             log.info("server:{}, path:{}", serverName, path);
             List<String> whiteList = whitePathConfig.getWhitePath(serverName);
+            log.info("whiteList:{}", String.join(",", whiteList));
             for (String rule : whiteList) {
                 // 与白名单一致
                 if (rule.equals(path)) {
