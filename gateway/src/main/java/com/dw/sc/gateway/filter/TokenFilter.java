@@ -65,6 +65,7 @@ public class TokenFilter implements GlobalFilter, Ordered {
      * @return
      */
     private boolean isWhite(String url) {
+        log.debug("url:{}", url);
         // 路径为空
         if (StringUtils.isEmpty(url)) {
             return false;
@@ -76,7 +77,7 @@ public class TokenFilter implements GlobalFilter, Ordered {
             String serverName = m.group(1);
             // 路径
             String path = m.group(2);
-            log.debug("url:{}, server:{}, path:{}", url, serverName, path);
+            log.debug("server:{}, path:{}", serverName, path);
             List<String> whiteList = whitePathConfig.getWhitePath(serverName);
             for (String rule : whiteList) {
                 // 与白名单一致
