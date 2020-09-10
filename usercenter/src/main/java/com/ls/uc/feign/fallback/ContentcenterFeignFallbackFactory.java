@@ -1,5 +1,7 @@
 package com.ls.uc.feign.fallback;
 
+import com.dw.sc.common.enums.ResultEnum;
+import com.dw.sc.common.exception.BusiException;
 import com.ls.uc.feign.client.ContentcenterFeignService;
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +13,7 @@ public class ContentcenterFeignFallbackFactory implements FallbackFactory<Conten
 
     @Override
     public ContentcenterFeignService create(Throwable throwable) {
-        log.warn("内容中心连接出错...");
-        return null;
+        throw new BusiException(ResultEnum.PARAM_ERROR, throwable, "内容中心");
     }
 
 }

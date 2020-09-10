@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @FeignClient(
         name = "operatecenter",
-        contextId = "octest",
         fallbackFactory = OperatecenterFeignFallbackFactory.class
 )
 public interface OperatecenterFeignService {

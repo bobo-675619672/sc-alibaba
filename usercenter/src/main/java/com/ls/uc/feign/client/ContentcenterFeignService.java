@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @FeignClient(
         name = "contentcenter",
-        contextId = "cctest",
         fallbackFactory = ContentcenterFeignFallbackFactory.class
 )
 public interface ContentcenterFeignService {
