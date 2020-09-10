@@ -55,7 +55,7 @@ public class TokenFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return -1;
+        return 1;
     }
 
     /**
@@ -126,18 +126,18 @@ public class TokenFilter implements GlobalFilter, Ordered {
         return "/" + String.join("\\/", paths);
     }
 
-    public static void main(String[] args) {
-        Pattern p = Pattern.compile(PATH_REGEX);
-        Matcher m = p.matcher("/A/B/C/D/E");
-        if (m.find()) {
-            System.out.println(m.groupCount());
-            System.out.println(m.group(0));
-            System.out.println(m.group(1));
-            System.out.println(m.group(2));
-            System.out.println(m.group(3));
-        }
-
-    }
+//    public static void main(String[] args) {
+//        Pattern p = Pattern.compile(PATH_REGEX);
+//        Matcher m = p.matcher("/A/B/C/D/E");
+//        if (m.find()) {
+//            System.out.println(m.groupCount());
+//            System.out.println(m.group(0));
+//            System.out.println(m.group(1));
+//            System.out.println(m.group(2));
+//            System.out.println(m.group(3));
+//        }
+//
+//    }
 
 
 }

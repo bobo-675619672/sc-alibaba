@@ -1,5 +1,6 @@
 package com.dw.sc.gateway;
 
+import com.dw.sc.common.enums.ResultEnum;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;

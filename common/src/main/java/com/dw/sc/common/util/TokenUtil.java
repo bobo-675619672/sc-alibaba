@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dw.sc.common.bean.TokenBean;
 import com.dw.sc.common.constant.TokenConstant;
 import com.dw.sc.common.enums.ResultEnum;
-import com.dw.sc.common.exception.BusiRuntimeException;
+import com.dw.sc.common.exception.BusiException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -35,14 +35,14 @@ public class TokenUtil {
                     .compact();
             token = TokenConstant.PRE_FIX + token;
         } catch (Exception e) {
-            throw new BusiRuntimeException(ResultEnum.TOKEN_BUILD_ERROR);
+            throw new BusiException(ResultEnum.TOKEN_BUILD_ERROR);
         }
         return token;
     }
 
     public static Claims parseToken(String token) {
         if (StringUtils.isEmpty(token)) {
-            throw new BusiRuntimeException(ResultEnum.TOKEN_EMPTY);
+            throw new BusiException(ResultEnum.TOKEN_EMPTY);
         }
         Claims claims;
         try {
@@ -51,9 +51,9 @@ public class TokenUtil {
                     .parseClaimsJws(token.replaceFirst(TokenConstant.PRE_FIX, ""))
                     .getBody();
         } catch (ExpiredJwtException e) {
-            throw new BusiRuntimeException(ResultEnum.TOKEN_INVALID);
+            throw new BusiException(ResultEnum.TOKEN_INVALID);
         } catch (Exception e) {
-            throw new BusiRuntimeException(ResultEnum.TOKEN_ERROR);
+            throw new BusiException(ResultEnum.TOKEN_ERROR);
         }
         return claims;
     }
