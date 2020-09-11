@@ -179,22 +179,9 @@
 
     <build>
         <plugins>
-            <!--添加maven插件-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <classifier>execute</classifier>
-                    <mainClass>com.gfs.operatecenter.OperatecenterApplication</mainClass>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>none</phase>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
