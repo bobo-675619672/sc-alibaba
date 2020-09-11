@@ -18,11 +18,11 @@ import javax.validation.Valid;
  */
 @Api(tags = "测试请求")
 @RestController
-@RequestMapping("/operate")
+@RequestMapping("/test")
 public class TestController {
 
     @ApiOperation(value = "测试")
-    @GetMapping("/test")
+    @GetMapping("/query")
     public String query(@RequestParam Long id) {
 
         return "your Id is : " + id;

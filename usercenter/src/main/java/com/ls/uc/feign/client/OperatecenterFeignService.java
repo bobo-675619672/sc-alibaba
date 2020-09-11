@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 )
 public interface OperatecenterFeignService {
 
-    @GetMapping("/operate/test")
+    @GetMapping("/test/query")
     ResponseMsg<String> query();
 
 }
