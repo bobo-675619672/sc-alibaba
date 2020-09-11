@@ -123,10 +123,11 @@
 <!--            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>-->
 <!--        </dependency>-->
         <!-- 公共模块 -->
+        <!-- 公共模块 -->
         <dependency>
-            <groupId>com.gfs</groupId>
+            <groupId>com.dw.sc</groupId>
             <artifactId>common</artifactId>
-            <version>${gfs.version}</version>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!-- redis -->
 <!--        <dependency>-->

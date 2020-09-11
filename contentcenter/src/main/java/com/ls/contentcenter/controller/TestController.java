@@ -15,7 +15,7 @@ import javax.validation.Valid;
 @Api("内容中心")
 @RestController
 @RequestMapping("/test")
-public class TestControler extends BaseController {
+public class TestController extends BaseController {
 
     @ApiOperation(value = "测试")
     @GetMapping("/query")
