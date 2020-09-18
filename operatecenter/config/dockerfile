@@ -1,0 +1,4 @@
+FROM java:8
+VOLUME /tmp/tomcat
+ADD operatecenter-0.0.1-SNAPSHOT.jar operatecenter.jar
+ENTRYPOINT ["java","-Xms10m","-Xmx100m","-XX:MetaspaceSize=120m","-XX:MaxMetaspaceSize=240m","-Djava.security.egd=file:/dev/./urandom","-jar","/operatecenter.jar"]
