@@ -19,9 +19,9 @@ public class SwaggerHeaderFilter extends AbstractGatewayFilterFactory {
             ServerHttpRequest request = exchange.getRequest();
             String path = request.getURI().getPath();
             log.info("path:{}", path);
-//            if (!StringUtils.endsWithIgnoreCase(path,URI)) {
-//                return chain.filter(exchange);
-//            }
+            if (!StringUtils.endsWithIgnoreCase(path,URI)) {
+                return chain.filter(exchange);
+            }
             String basePath = path.substring(0, path.lastIndexOf(URI));
             log.info("basePath:{}", basePath);
             ServerHttpRequest newRequest = request.mutate().header(HEADER_NAME, basePath).build();

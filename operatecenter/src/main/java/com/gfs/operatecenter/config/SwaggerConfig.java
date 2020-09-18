@@ -42,7 +42,7 @@ public class SwaggerConfig {
                 .pathProvider(new RelativePathProvider(servletContext) {
                     @Override
                     public String getApplicationBasePath() {
-                        return "/operatecenter";
+                        return "/oc";
                     }
                 })
                 .select()
