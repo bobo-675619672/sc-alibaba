@@ -45,7 +45,7 @@ public class SwaggerConfig {
                 .pathProvider(new RelativePathProvider(servletContext) {
                     @Override
                     public String getApplicationBasePath() {
-                        return "/usercenter";
+                        return "/uc";
                     }
                 })
                 .select()
