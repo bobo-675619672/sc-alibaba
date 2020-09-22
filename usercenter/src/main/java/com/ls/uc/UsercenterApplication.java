@@ -10,7 +10,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
-@MapperScan({"com.gitee.sunchenbin.mybatis.actable.manager.*","com.gitee.sunchenbin.mybatis.actable.manager.*","com.ls.uc.dao",})
+@MapperScan({"com.gitee.sunchenbin.mybatis.actable.manager.*","com.gitee.sunchenbin.mybatis.actable.manager.*","com.ls.uc.dao","com.dw.*"})
 public class UsercenterApplication {
     public static void main(String[] args) {
         SpringApplication.run(UsercenterApplication.class, args);

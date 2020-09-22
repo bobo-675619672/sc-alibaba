@@ -116,6 +116,12 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
         </dependency>
+        <!-- 引入自定义starter -->
+        <dependency>
+            <groupId>com.dw</groupId>
+            <artifactId>mystarter-spring-boot-starter</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <!-- 公共模块 -->
         <dependency>
             <groupId>com.dw.sc</groupId>
